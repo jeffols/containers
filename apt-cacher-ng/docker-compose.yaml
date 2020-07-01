@@ -1,0 +1,14 @@
+# Bring up apt-cacher-ng
+# Note location of where cache will be located in volumes section
+
+version: '2'
+
+services:
+  apt-cacher-ng:
+    image: sameersbn/apt-cacher-ng:latest
+    container_name: apt-cacher-ng
+    restart: unless-stopped
+    ports:
+      - "3142:3142"
+    volumes:
+      - "/private/var/cache/apt-cacher-ng:/var/cache/apt-cacher-ng"

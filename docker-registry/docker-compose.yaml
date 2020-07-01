@@ -1,0 +1,45 @@
+# Example of a local docker registry.  
+# This is NOT a read-through cache, so public images need to be seeded to be used.
+# e.g.  docker tag ubuntu:xenial localhost:5000/ubuntu:xenial
+#       docker push localhost:5000/ubuntu:xenial
+
+version: '2'
+
+networks:
+  registry-network:
+
+services:
+
+  # insecure registry example.  Can also be backed by s3.
+  # many more options available: https://docs.docker.com/registry/configuration/
+  registry:
+    image: registry:2
+    container_name: registry
+    restart: unless-stopped
+    privileged: true
+    volumes: 
+      - "./data:/var/lib/registry"
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    networks:
+      registry-network:
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_HTTP_ADDR: registry:5000
+      REGISTRY_HTTP_SECRET: supersecret
+      REGISTRY_HTTP_DEBUG_ADDR: registry:5001
+      REGISTRY_LOG_LEVEL: debug
+
+  # one of many web interfaces to view local registry
+  registry-web:
+    image: hyper/docker-registry-web
+    restart: unless-stopped
+    container_name: registry-web
+    ports:
+      - "8080:8080"
+    networks:
+      registry-network:
+    environment:
+      - "REGISTRY_URL=http://registry:5000/v2"
+      - "REGISTRY_NAME=localhost:5000"

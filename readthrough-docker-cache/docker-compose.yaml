@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  registry:
+    image: registry:2
+    restart: unless-stopped
+    volumes: 
+      - "./data:/var/lib/registry"
+      - "$PWD/config.yaml:/etc/docker/registry/config.yml"
+    ports:
+      - "5000:5000"

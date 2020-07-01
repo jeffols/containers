@@ -1,0 +1,28 @@
+version: 0.1
+log:
+  level: debug
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+    maxthreads: 100
+  delete:
+    enabled: false
+  cache:
+    blobdescriptor: inmemory
+  maintenance:
+    uploadpurging:
+      enabled: true
+      age: 168h
+      interval: 24h
+      dryrun: false
+    readonly:
+      enabled: false
+http:
+  addr: localhost:5000
+  secret: supersecret
+  debug:
+    addr: localhost:5001
+proxy:
+  remoteurl: https://registry-1.docker.io
+  #username: [username]
+  #password: [password]
